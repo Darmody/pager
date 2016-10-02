@@ -1,4 +1,5 @@
 import qs from 'qs'
+import fetch from 'isomorphic-fetch'
 
 const defaultClient = ({
   method = 'GET',
@@ -7,7 +8,7 @@ const defaultClient = ({
   body = {},
   headers = {},
   json = false,
-  credentials = 'no-cors',
+  mode,
 }) => {
   let theHeaders = headers
   let theBody = body
@@ -19,13 +20,15 @@ const defaultClient = ({
     }
 
     theBody = JSON.stringify(body)
+  } else if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+    theBody = qs.stringify(body)
   }
 
   return fetch(`${endpoint}?${qs.stringify(queryString)}`, {
     method,
     headers: theHeaders,
     body: method === 'GET' ? undefined : theBody,
-    credentials,
+    mode,
   })
 }
 

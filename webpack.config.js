@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -20,6 +21,7 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new Dotenv(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src/index.html'),
       inject: true
@@ -28,6 +30,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.js$/, loaders: ['babel', 'eslint'], include: path.join(__dirname, 'src'), },
+      { test: /\.json$/, loader: 'json-loader' },
       {
         test: /\.scss/,
         loaders: [
@@ -51,4 +54,5 @@ module.exports = {
     ],
     extensions: ['', '.js'],
   },
+  target: 'electron',
 };

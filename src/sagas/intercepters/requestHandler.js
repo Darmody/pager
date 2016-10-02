@@ -1,7 +1,4 @@
-import { put } from 'redux-saga/effects'
-
-function* requestHandler(requestType) {
-  yield put({ type: requestType })
+function requestHandler() {
 }
 
 export default requestHandler

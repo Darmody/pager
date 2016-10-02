@@ -15,7 +15,6 @@ const apiClient = ({
   body,
   headers,
   json,
-  credentials: 'same-origin',
 })
 
 export default apiClient
