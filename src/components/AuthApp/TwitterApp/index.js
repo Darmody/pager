@@ -8,72 +8,40 @@ import AuthApp from 'components/AuthApp'
 import { auth } from 'actions/douban'
 import shortid from 'utils/shortid'
 import styles from './styles.scss'
-import doubanIcon from './douban.png'
+import icon from './twitter.png'
 
-const DoubanApp = ({
+const TwitterApp = ({
   authError,
-  authed,
   showingApp, showApp,
   appKey,
   username, password, onUsernameChange, onPasswordChange, onSubmit,
 }) => (
   <AuthApp
-    appName="豆瓣"
-    appIcon={doubanIcon}
-    appTheme="#06c012"
+    appName="Twitter"
+    appTheme="white"
+    appIcon={icon}
     appKey={appKey}
-    authed={authed}
     showApp={showApp}
     showingApp={showingApp}
   >
     <form styleName="binding-section">
       { authError && (<div>账号绑定出错啦</div>) }
-      {
-        !authed && (
-          <div styleName="login-section">
-            <input
-              type="text"
-              name="username"
-              styleName="binding-input"
-              value={username}
-              placeholder="Username"
-              onChange={onUsernameChange}
-            />
-            <input
-              type="password"
-              name="password"
-              styleName="binding-input"
-              value={password}
-              placeholder="Password"
-              onChange={onPasswordChange}
-            />
-            <button
-              type="button" onClick={onSubmit} styleName="login-button"
-            >
-              登录
-            </button>
-          </div>
-        )
-      }
-      {
-        authed && (
-          <button
-            type="button" onClick={onSubmit} styleName="logout-button"
-          >
-            退出
-          </button>
-        )
-      }
+      <input
+        type="text" name="username" value={username} onChange={onUsernameChange}
+      />
+      <input
+        type="password" name="password" value={password} onChange={onPasswordChange}
+      />
+      <button type="button" onClick={onSubmit} />
     </form>
   </AuthApp>
 )
 
 const enhancer = _.compose(
-  setDisplayName('DoubanApp'),
+  setDisplayName('TwitterApp'),
   connect(
     state => ({
-      authError: state.auth.douban.error,
-      authed: state.auth.douban.authed,
+      authError: state.auth.twitter.error,
     }),
     dispatch => ({
       ...bindActionCreators({ auth }, dispatch)
@@ -95,4 +63,4 @@ const enhancer = _.compose(
   CSSModules(styles),
 )
 
-export default enhancer(DoubanApp)
+export default enhancer(TwitterApp)

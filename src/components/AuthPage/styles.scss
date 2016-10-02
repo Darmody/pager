@@ -1,10 +1,10 @@
-@import '~sass-flex-mixin/flex';
-
 .auth-page {
-  @extend %flexbox;
-  @include flex-direction(column);
-  @include align-items(center);
-  @include justify-content(center);
-  background-color: #eee;
-  margin-top: 50px;
+  margin-top: 70px;
+  background-color: white;
+  height: 350px;
+  width: 65%;
+  border-radius: 5px;
+  box-shadow: 2px 2px 1px #BBC4C2;
+  padding: 20px 0;
+  overflow: scroll;
 }

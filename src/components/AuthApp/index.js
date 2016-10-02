@@ -7,26 +7,27 @@ import CSSModules from 'react-css-modules'
 import styles from './styles.scss'
 
 const AuthApp = ({
-  appName, appIcon, appKey,
+  appTheme, appIcon, appKey, authed,
   children,
   showingApp, onClick
 }) => (
   <div styleName="auth-app" >
     <div
       styleName="app-info"
+      style={{ backgroundColor: appTheme }}
+      className={(authed || showingApp === appKey) ? '' : 'unauth'}
       onClick={onClick}
     >
       <img
         src={appIcon}
-        alt={appName}
+        role="presentation"
         styleName="app-icon"
       />
-      <span> {appName} </span>
     </div>
     <Collapse
       isOpened={showingApp === appKey}
       springConfig={presets.gentle}
-      fixedHeight={50}
+      fixedHeight={authed ? 100 : 180}
     >
       {children}
     </Collapse>

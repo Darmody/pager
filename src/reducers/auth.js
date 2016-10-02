@@ -18,7 +18,19 @@ const initialState = Immutable({
     lastStatusId: '',
     refreshToken: null,
     expiredAt: null,
-  }
+  },
+  github: {
+    error: false,
+    authed: false,
+  },
+  twitter: {
+    error: false,
+    authed: false,
+  },
+  zhihu: {
+    error: false,
+    authed: false,
+  },
 })
 
 export default handleActions({
