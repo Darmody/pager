@@ -4,8 +4,12 @@ import {
   DOUBAN_STATUSES_REQUEST,
 } from 'constants/ActionTypes'
 
-export const auth = createAction( // eslint-disable-line import/prefer-default-export
+export const auth = createAction(
   DOUBAN_AUTH_REQUEST, (username, password) => ({ username, password })
+)
+
+export const refreshAuth = createAction(
+  DOUBAN_AUTH_REQUEST, token => ({ token })
 )
 
 export const statuses = createAction( // eslint-disable-line import/prefer-default-export

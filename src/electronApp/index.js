@@ -1,13 +1,13 @@
 import { BrowserWindow, app, ipcMain as ipc } from 'electron'
-import _ from 'ramda'
+import merge from 'merge-deep'
 import electronStore from 'electron-json-storage'
 import AuthWindow from './AuthWindow'
 import createTray from './Tray'
 
 const handleAuthStore = () => {
   ipc.on('setAuthInfo:request', (event, data) => {
-    electronStore.get('authConfig', (originData) => {
-      electronStore.set('authConfig', _.merge(originData || {}, data))
+    electronStore.get('authConfig', (error, originData) => {
+      electronStore.set('authConfig', merge(originData || {}, data))
     })
   })
 
@@ -20,6 +20,7 @@ const handleAuthStore = () => {
 
 const onAppReady = () => {
   handleAuthStore()
+  AuthWindow.create()
   createTray({
     onClickAuthMenu: AuthWindow.create,
   })

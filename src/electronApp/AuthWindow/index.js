@@ -19,7 +19,7 @@ const create = () => {
     win.loadURL('http://localhost:3000')
 
     win.on('close', (event) => {
-      if (win.forceClose) return
+      if (!win || win.forceClose) return
 
       event.preventDefault()
       win.hide()

@@ -8,8 +8,8 @@ import {
 import doubanClient from 'httpClients/doubanClient'
 import httpRequestHandler from '../intercepters/httpRequestHandler'
 
-function* request({ username, password }) {
-  return yield call(doubanClient.auth, { username, password })
+function* request({ username, password, token }) {
+  return yield call(doubanClient.auth, { username, password, token })
 }
 
 function* authRequest({ payload }) {

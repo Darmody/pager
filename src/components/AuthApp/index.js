@@ -9,9 +9,9 @@ import styles from './styles.scss'
 const AuthApp = ({
   appTheme, appIcon, appKey, authed,
   children,
-  showingApp, onClick
+  showingApp, onClick, appRef,
 }) => (
-  <div styleName="auth-app" >
+  <div styleName="auth-app" ref={appRef}>
     <div
       styleName="app-info"
       style={{ backgroundColor: appTheme }}
@@ -27,7 +27,7 @@ const AuthApp = ({
     <Collapse
       isOpened={showingApp === appKey}
       springConfig={presets.gentle}
-      fixedHeight={authed ? 100 : 180}
+      fixedHeight={authed ? 100 : 200}
     >
       {children}
     </Collapse>
@@ -39,6 +39,9 @@ const enhancer = _.compose(
   withHandlers({
     onClick: props => () => {
       props.showApp(props.appKey !== props.showingApp ? props.appKey : null)
+    },
+    appRef: () => (ref) => {
+      ref.addEventListener('click', ref.scrollIntoViewIfNeeded)
     }
   }),
   CSSModules(styles),

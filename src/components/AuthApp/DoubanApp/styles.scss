@@ -20,6 +20,12 @@
   @include justify-content(center);
 }
 
+.error-message {
+  font-size: 10px;
+  margin-bottom: 4px;
+  color: #EE756F;
+}
+
 .binding-input {
   margin: 3px;
   height: 35px;
@@ -44,6 +50,7 @@
   text-transform: uppercase;
   letter-spacing: .5px;
   cursor: pointer;
+  outline: none;
 }
 
 .logout-button {
@@ -58,4 +65,5 @@
   text-transform: uppercase;
   letter-spacing: .5px;
   cursor: pointer;
+  outline: none;
 }
