@@ -1,5 +1,5 @@
 import qs from 'qs'
-import fetch from 'isomorphic-fetch'
+// import fetch from 'isomorphic-fetch'
 
 const defaultClient = ({
   method = 'GET',

@@ -6,7 +6,7 @@ export function doubanScheduler() {
     }
   }
 
-  window.setInterval(fetchStatuses, 10 * 1000)
+  window.setInterval(fetchStatuses, 30 * 1000)
 }
 
 export default function scheduler() {

@@ -5,16 +5,17 @@ import _ from 'ramda'
 import { setDisplayName, withState, withHandlers, lifecycle } from 'recompose'
 import CSSModules from 'react-css-modules'
 import AuthApp from 'components/AuthApp'
-import { auth } from 'actions/douban'
+import { auth } from 'actions/zhihu'
 import shortid from 'utils/shortid'
+import BindingSection from './BindingSection'
 import styles from './styles.scss'
 import icon from './zhihu.jpeg'
 
 const ZhihuApp = ({
-  authError,
+  authError, authed,
   showingApp, showApp,
   appKey,
-  username, password, onUsernameChange, onPasswordChange, onSubmit,
+  username, password, onUsernameChange, onPasswordChange, onLogin, onLogout,
 }) => (
   <AuthApp
     appName="Zhihu"
@@ -24,16 +25,17 @@ const ZhihuApp = ({
     showApp={showApp}
     showingApp={showingApp}
   >
-    <form styleName="binding-section">
-      { authError && (<div>账号绑定出错啦</div>) }
-      <input
-        type="text" name="username" value={username} onChange={onUsernameChange}
-      />
-      <input
-        type="password" name="password" value={password} onChange={onPasswordChange}
-      />
-      <button type="button" onClick={onSubmit} />
-    </form>
+    <BindingSection
+      authError={authError}
+      authed={authed}
+      username={username}
+      password={password}
+      onUsernameChange={onUsernameChange}
+      onPasswordChange={onPasswordChange}
+      onLogin={onLogin}
+      onLogout={onLogout}
+
+    />
   </AuthApp>
 )
 
@@ -53,7 +55,8 @@ const enhancer = _.compose(
   withHandlers({
     onUsernameChange: props => event => props.setUsername(event.target.value),
     onPasswordChange: props => event => props.setPassword(event.target.value),
-    onSubmit: props => () => props.auth(props.username, props.password),
+    onLogin: props => () => props.auth(props.username, props.password),
+    onLogout: props => () => props.clean('zhihu'),
   }),
   lifecycle({
     componentWillMount() {
