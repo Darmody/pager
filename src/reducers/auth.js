@@ -6,10 +6,12 @@ import {
   DOUBAN_AUTH_SUCCESS,
   DOUBAN_AUTH_FAILURE,
   DOUBAN_STATUSES_SUCCESS,
+  GITHUB_EVENTS_SUCCESS,
+  GITHUB_AUTH,
   AUTH_STORE,
   AUTH_CLEAN,
 } from 'constants/ActionTypes'
-import { doubanNotify } from 'utils/notification'
+import { doubanNotify, githubNotify } from 'utils/notification'
 
 const initialState = Immutable({
   douban: {
@@ -24,6 +26,8 @@ const initialState = Immutable({
   github: {
     error: false,
     authed: false,
+    username: '',
+    lastEventId: '',
   },
   twitter: {
     error: false,
@@ -74,8 +78,30 @@ export default handleActions({
     ipc.send('setAuthInfo:request', doubanAuth)
     return state.merge(doubanAuth, { deep: true })
   },
+  [GITHUB_EVENTS_SUCCESS]: (state, { payload }) => {
+    if (payload.length > 0 && payload[0].id !== state.github.lastEventId) {
+      const { actor, repo, type, id } = payload[0]
+      githubNotify(actor, repo, payload[0].payload, type)
+      const githubAuth = { github: { lastEventId: id } }
+      ipc.send('setAuthInfo:request', githubAuth)
+      return state.merge(githubAuth, { deep: true })
+    }
+
+    return state
+  },
+  [GITHUB_AUTH]: (state, { payload }) => {
+    const githubAuth = {
+      github: {
+        authed: true,
+        username: payload.username,
+      },
+    }
+
+    ipc.send('setAuthInfo:request', githubAuth)
+    return state.merge(githubAuth, { deep: true })
+  },
   [AUTH_CLEAN]: (state, { payload }) => {
-    ipc.send('setAuthInfo:request', initialState[payload.app])
+    ipc.send('setAuthInfo:request', { [payload.app]: initialState[payload.app] })
     return state.merge({
       [payload.app]: initialState[payload.app],
     }, { deep: true })

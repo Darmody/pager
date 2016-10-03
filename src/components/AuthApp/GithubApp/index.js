@@ -5,35 +5,37 @@ import _ from 'ramda'
 import { setDisplayName, withState, withHandlers, lifecycle } from 'recompose'
 import CSSModules from 'react-css-modules'
 import AuthApp from 'components/AuthApp'
-import { auth } from 'actions/douban'
+import { auth } from 'actions/github'
+import { clean } from 'actions/auth'
 import shortid from 'utils/shortid'
+import BindingSection from './BindingSection'
 import styles from './styles.scss'
 import icon from './github.png'
 
 const GithubApp = ({
-  authError,
+  authError, authed, inputUsername,
   showingApp, showApp,
   appKey,
-  username, password, onUsernameChange, onPasswordChange, onSubmit,
+  onUsernameChange, onLogin, onLogout,
 }) => (
   <AuthApp
     appName="Github"
     appTheme="black"
     appIcon={icon}
     appKey={appKey}
+    authed={authed}
     showApp={showApp}
     showingApp={showingApp}
+    bindingSectionHeightInAuthed={130}
   >
-    <form styleName="binding-section">
-      { authError && (<div>账号绑定出错啦</div>) }
-      <input
-        type="text" name="username" value={username} onChange={onUsernameChange}
-      />
-      <input
-        type="password" name="password" value={password} onChange={onPasswordChange}
-      />
-      <button type="button" onClick={onSubmit} />
-    </form>
+    <BindingSection
+      authError={authError}
+      authed={authed}
+      username={inputUsername}
+      onUsernameChange={onUsernameChange}
+      onLogin={onLogin}
+      onLogout={onLogout}
+    />
   </AuthApp>
 )
 
@@ -42,23 +44,29 @@ const enhancer = _.compose(
   connect(
     state => ({
       authError: state.auth.github.error,
+      authed: state.auth.github.authed,
+      username: state.auth.github.username,
     }),
     dispatch => ({
-      ...bindActionCreators({ auth }, dispatch)
+      ...bindActionCreators({ auth, clean }, dispatch)
     })
   ),
   withState('appKey', 'setAppKey', null),
-  withState('username', 'setUsername', ''),
-  withState('password', 'setPassword', ''),
+  withState('inputUsername', 'setUsername', ''),
   withHandlers({
     onUsernameChange: props => event => props.setUsername(event.target.value),
-    onPasswordChange: props => event => props.setPassword(event.target.value),
-    onSubmit: props => () => props.auth(props.username, props.password),
+    onLogin: props => () => props.auth(props.inputUsername),
+    onLogout: props => () => props.clean('github'),
   }),
   lifecycle({
     componentWillMount() {
       this.props.setAppKey(shortid())
-    }
+    },
+    componentWillReceiveProps(nextProps) {
+      if (this.props.username !== nextProps.username) {
+        this.props.setUsername(nextProps.username)
+      }
+    },
   }),
   CSSModules(styles),
 )

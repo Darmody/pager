@@ -9,6 +9,8 @@ import styles from './styles.scss'
 const AuthApp = ({
   appTheme, appIcon, appKey, authed,
   children,
+  bindingSectionHeightInAuthed = 100,
+  bindingSectionHeightInUnauthed = 200,
   showingApp, onClick, appRef,
 }) => (
   <div styleName="auth-app" ref={appRef}>
@@ -27,7 +29,8 @@ const AuthApp = ({
     <Collapse
       isOpened={showingApp === appKey}
       springConfig={presets.gentle}
-      fixedHeight={authed ? 100 : 200}
+      fixedHeight={
+        authed ? bindingSectionHeightInAuthed : bindingSectionHeightInUnauthed}
     >
       {children}
     </Collapse>

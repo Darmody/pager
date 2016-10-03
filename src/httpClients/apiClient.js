@@ -1,4 +1,3 @@
-import config from 'constants/Configuration'
 import defaultClient from './defaultClient'
 
 const apiClient = ({
@@ -7,10 +6,10 @@ const apiClient = ({
   queryString = {},
   body = {},
   headers = {},
-  json = true,
+  json,
 }) => defaultClient({
   method,
-  endpoint: `${config.apiEndpoint}/${endpoint}`,
+  endpoint,
   queryString,
   body,
   headers,

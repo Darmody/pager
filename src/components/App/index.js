@@ -7,6 +7,7 @@ import { setDisplayName, lifecycle } from 'recompose'
 import Content from 'components/Content'
 import { store as storeAuth } from 'actions/auth'
 import { statuses as doubanStatuses } from 'actions/douban'
+import { events as githubEvents } from 'actions/github'
 import scheduler from 'utils/scheduler'
 import 'normalize.css'
 import 'styles/app.scss'
@@ -22,9 +23,12 @@ const enhancer = _.compose(
   connect(
     state => ({
       doubanToken: state.auth.douban.token,
+      githubUsername: state.auth.github.username,
     }),
     dispatch => ({
-      ...bindActionCreators({ storeAuth, doubanStatuses }, dispatch)
+      ...bindActionCreators({
+        storeAuth, doubanStatuses, githubEvents,
+      }, dispatch)
     })
   ),
   lifecycle({

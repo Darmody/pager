@@ -1,0 +1,69 @@
+@import '~sass-flex-mixin/flex';
+
+.binding-section {
+  @extend %flexbox;
+  @include flex-direction(column);
+  @include align-items(center);
+  @include justify-content(center);
+
+  margin-top: 5px;
+  padding: 20px 0px;
+  width: 183px;
+  background-color: #DBE3E9;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.login-section {
+  @extend %flexbox;
+  @include flex-direction(column);
+  @include align-items(center);
+  @include justify-content(center);
+}
+
+.error-message {
+  font-size: 10px;
+  margin-bottom: 4px;
+  color: #EE756F;
+}
+
+.binding-input {
+  margin: 3px;
+  height: 35px;
+  width: 120px;
+  border: solid 1.3px #DBE3E9;
+  border-radius: 4px;
+  color: #BBC4C2;
+  font-size: 13px;
+  padding: 2px 18px;
+  outline: none;
+}
+
+.login-button {
+  height: 35px;
+  width: 156px;
+  margin: 3px;
+  border: none;
+  border-radius: 4px;
+  background-color: #EE756F;
+  font-size: 13px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  cursor: pointer;
+  outline: none;
+}
+
+.logout-button {
+  height: 35px;
+  width: 156px;
+  margin: 3px;
+  border: none;
+  border-radius: 4px;
+  background-color: #EE756F;
+  font-size: 13px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  cursor: pointer;
+  outline: none;
+}
