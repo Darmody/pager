@@ -1,3 +1,4 @@
+import _ from 'ramda'
 import { shell } from 'electron'
 
 const notify = (title, content, icon, link) => {
@@ -11,7 +12,40 @@ const notify = (title, content, icon, link) => {
   }
 }
 
-export const doubanNotify = (...args) => notify('豆瓣', ...args, 'http://www.douban.com')
+const replaceStars = (content) => {
+  const starsPattern = /\[score\](.*)\[\/score\]/
+  const matches = _.match(starsPattern, content)
+  if (matches[0]) {
+    const stars = _.join('', _.repeat('★', parseInt(matches[0][7], 10)))
+    return _.replace(starsPattern, stars, content)
+  }
+
+  return content
+}
+
+export const doubanNotify = (status) => {
+  const { title, text, user, attachments } = status
+  const resharedStatus = status.reshared_status
+  let content = ''
+  let icon = ''
+
+  if (resharedStatus) {
+    const resharedStatusText = resharedStatus.text ? `"${resharedStatus.text}"` : ''
+    const resharedStatusTitle = resharedStatus.attachments[0].title ?
+      `${resharedStatus.attachments[0].title} ` : ''
+    content = `${resharedStatus.user.screen_name} ${resharedStatus.title} ` +
+      `${resharedStatusTitle} ${resharedStatusText} 由 ${user.screen_name} 转播`
+    icon = resharedStatus.user.small_avatar
+  } else {
+    content = `${user.screen_name} ${title} ` +
+      `${attachments[0].title ? `${attachments[0].title} ` : ''}${text}`
+    icon = user.small_avatar
+  }
+
+  content = replaceStars(content)
+
+  notify('豆瓣', content, icon, 'http://www.douban.com')
+}
 
 export const githubNotify = (actor, repo, payload, type) => {
 

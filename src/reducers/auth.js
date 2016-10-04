@@ -46,9 +46,8 @@ const initialState = Immutable({
 export default handleActions({
   [DOUBAN_STATUSES_SUCCESS]: (state, { payload }) => {
     if (payload.length > 0 && payload[0].id !== state.douban.lastStatusId) {
-      const { text, user, id } = payload[0]
-      doubanNotify(text, user.small_avatar)
-      const doubanAuth = { douban: { lastStatusId: id } }
+      doubanNotify(payload[0])
+      const doubanAuth = { douban: { lastStatusId: payload[0].id } }
       ipc.send('setAuthInfo:request', doubanAuth)
       return state.merge(doubanAuth, { deep: true })
     }
