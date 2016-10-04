@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { ipcRenderer as ipc } from 'electron'
 import { setDisplayName, lifecycle } from 'recompose'
 import Content from 'components/Content'
+import Footer from 'components/Footer'
 import { store as storeAuth } from 'actions/auth'
 import { statuses as doubanStatuses } from 'actions/douban'
 import { events as githubEvents } from 'actions/github'
@@ -15,6 +16,7 @@ import 'styles/app.scss'
 const App = () => (
   <div>
     <Content />
+    <Footer />
   </div>
 )
 

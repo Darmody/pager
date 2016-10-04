@@ -10,10 +10,14 @@ import {
   GITHUB_AUTH,
   AUTH_STORE,
   AUTH_CLEAN,
+  AUTH_START,
+  AUTH_FAILED,
+  AUTH_END,
 } from 'constants/ActionTypes'
 import { doubanNotify, githubNotify } from 'utils/notification'
 
 const initialState = Immutable({
+  status: 'pending',
   douban: {
     error: false,
     authed: false,
@@ -106,5 +110,8 @@ export default handleActions({
       [payload.app]: initialState[payload.app],
     }, { deep: true })
   },
-  [AUTH_STORE]: (state, { payload }) => state.merge(payload.data)
+  [AUTH_STORE]: (state, { payload }) => state.merge(payload.data),
+  [AUTH_START]: state => state.merge({ status: 'started' }),
+  [AUTH_FAILED]: state => state.merge({ status: 'failed' }),
+  [AUTH_END]: state => state.merge({ status: 'success' }),
 }, initialState)

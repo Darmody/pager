@@ -5,7 +5,7 @@ import failureHandler from './failureHandler'
 function* httpRequestHandler(request, params, types, schema, meta) {
   let response = {}
   try {
-    yield requestHandler()
+    yield requestHandler(types[0])
     response = yield request(params)
 
     if (response.ok) {

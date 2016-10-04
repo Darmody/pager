@@ -1,0 +1,40 @@
+@import '~sass-flex-mixin/flex';
+
+.footer {
+  @extend %flexbox;
+  @include flex-direction(column);
+  @include align-items(center);
+  @include justify-content(center);
+}
+
+.spinner-panel {
+  @extend %flexbox;
+  @include align-items(center);
+  @include justify-content(center);
+
+  margin-top: 20px;
+  width: 70px;
+  height: 70px;
+  border: solid 2px white;
+  border-radius: 100%;
+  background-color: #ffcb7d;
+  box-shadow: 2px 2px 1px #BBC4C2;
+  transition: all .2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.spinner {
+  height: 60px;
+}
+
+.text-section {
+  text-decoration: none;
+  outline: none;
+  text-align: center;
+  font-size: 11px;
+  color: white;
+  cursor: pointer;
+}
