@@ -1,5 +1,4 @@
 import qs from 'qs'
-// import fetch from 'isomorphic-fetch'
 
 const defaultClient = ({
   method = 'GET',
@@ -8,6 +7,7 @@ const defaultClient = ({
   body = {},
   headers = {},
   json = false,
+  credentials,
   mode,
 }) => {
   let theHeaders = headers
@@ -29,6 +29,7 @@ const defaultClient = ({
     headers: theHeaders,
     body: method === 'GET' ? undefined : theBody,
     mode,
+    credentials,
   })
 }
 

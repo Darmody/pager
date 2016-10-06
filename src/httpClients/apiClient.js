@@ -7,6 +7,7 @@ const apiClient = ({
   body = {},
   headers = {},
   json,
+  credentials,
 }) => defaultClient({
   method,
   endpoint,
@@ -14,6 +15,7 @@ const apiClient = ({
   body,
   headers,
   json,
+  credentials,
 })
 
 export default apiClient

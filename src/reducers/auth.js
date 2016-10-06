@@ -6,6 +6,9 @@ import {
   DOUBAN_AUTH_SUCCESS,
   DOUBAN_AUTH_FAILURE,
   DOUBAN_STATUSES_SUCCESS,
+  ZHIHU_AUTH_SUCCESS,
+  ZHIHU_AUTH_FAILURE,
+  ZHIHU_FEED_SUCCESS,
   GITHUB_EVENTS_SUCCESS,
   GITHUB_AUTH,
   AUTH_STORE,
@@ -14,7 +17,7 @@ import {
   AUTH_FAILED,
   AUTH_END,
 } from 'constants/ActionTypes'
-import { doubanNotify, githubNotify } from 'utils/notification'
+import { doubanNotify, githubNotify, zhihuNotify } from 'utils/notification'
 
 const initialState = Immutable({
   status: 'pending',
@@ -40,6 +43,12 @@ const initialState = Immutable({
   zhihu: {
     error: false,
     authed: false,
+    token: null,
+    lastFeedId: '',
+    refreshToken: null,
+    userId: null,
+    uid: null,
+    expiredAt: null,
   },
 })
 
@@ -80,6 +89,46 @@ export default handleActions({
 
     ipc.send('setAuthInfo:request', doubanAuth)
     return state.merge(doubanAuth, { deep: true })
+  },
+  [ZHIHU_FEED_SUCCESS]: (state, { payload }) => {
+    const data = payload.data[0]
+    if (data.id !== state.zhihu.lastFeedId) {
+      zhihuNotify(data)
+      const zhihuAuth = { zhihu: { lastFeedId: data.id } }
+      ipc.send('setAuthInfo:request', zhihuAuth)
+      return state.merge(zhihuAuth, { deep: true })
+    }
+
+    return state
+  },
+  [ZHIHU_AUTH_SUCCESS]: (state, { payload }) => {
+    const zhihuAuth = {
+      zhihu: {
+        error: false,
+        authed: true,
+        token: payload.access_token,
+        refreshToken: payload.refresh_token,
+        userId: payload.user_id,
+        uid: payload.uid,
+        expiredAt: moment()
+          .add((parseInt(payload.expires_in, 10) - (5 * 60)), 's').format(),
+      }
+    }
+    ipc.send('setAuthInfo:request', zhihuAuth)
+    ipc.send('setZhihuCookie:request', payload.cookie)
+
+    return state.merge(zhihuAuth, { deep: true })
+  },
+  [ZHIHU_AUTH_FAILURE]: (state) => {
+    const zhihuAuth = {
+      zhihu: {
+        ...initialState.zhihu,
+        error: true,
+      },
+    }
+
+    ipc.send('setAuthInfo:request', zhihuAuth)
+    return state.merge(zhihuAuth, { deep: true })
   },
   [GITHUB_EVENTS_SUCCESS]: (state, { payload }) => {
     if (payload.length > 0 && payload[0].id !== state.github.lastEventId) {

@@ -1,20 +1,6 @@
 import crypto from 'crypto'
 import qs from 'qs'
-import defaultClient from './defaultClient'
-
-const apiClient = ({
-  method = 'GET',
-  endpoint,
-  queryString = {},
-  body = {},
-  headers = {},
-}) => defaultClient({
-  method,
-  endpoint,
-  queryString,
-  body,
-  headers,
-})
+import apiClient from './apiClient'
 
 const zhihuHeaders = {
   'x-app-za': qs.stringify({
@@ -26,12 +12,15 @@ const zhihuHeaders = {
     Width: '750',
     Height: '1334',
   }),
+  // 'X-UDID': 'AABALMJSpQpLBXr5F8UWQCuKvSSdcPrYWsE=',
   'X-API-Version': process.env.ZHIHU_API_VERSION,
   'X-APP-VERSION': process.env.ZHIHU_APP_VERSION,
   'X-APP-Build': 'release',
   Authorization: `oauth ${process.env.ZHIHU_CLIENT_ID}`,
   'User-Agent': 'osee2unifiedRelease/512 CFNetwork/808.0.2 Darwin/16.0.0',
 }
+
+const oauthHeader = token => `Bearer ${token}`
 
 const signatureObject = (grandType) => {
   const source = 'com.zhihu.ios'
@@ -49,6 +38,12 @@ const signatureObject = (grandType) => {
   }
 }
 
+const needCaptcha = () => apiClient({
+  method: 'GET',
+  endpoint: 'https://api.zhihu.com/captcha',
+  headers: zhihuHeaders,
+})
+
 const auth = (username, password) => apiClient({
   method: 'POST',
   endpoint: 'https://api.zhihu.com/sign_in',
@@ -62,11 +57,29 @@ const auth = (username, password) => apiClient({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
     ...zhihuHeaders,
-  }
+  },
+  credentials: 'include',
+})
+
+const feeds = (token, count) => apiClient({
+  method: 'GET',
+  endpoint: 'https://api.zhihu.com/feeds',
+  queryString: {
+    limit: count,
+    action_feed: true,
+    reverse_order: 0,
+  },
+  headers: {
+    ...zhihuHeaders,
+    Authorization: oauthHeader(token),
+  },
+  credentials: 'include',
 })
 
 const zhihuClient = {
   auth: ({ username, password }) => auth(username, password),
+  needCaptcha,
+  feeds: ({ token, count }) => feeds(token, count),
 }
 
 export default zhihuClient

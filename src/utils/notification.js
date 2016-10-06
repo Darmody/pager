@@ -75,4 +75,13 @@ export const githubNotify = (actor, repo, payload, type) => {
   notify('Github', content, icon, 'http://github.com')
 }
 
+export const zhihuNotify = (feed) => {
+  const { target } = feed
+  const actionText = feed.action_text
+
+  const content = `${actionText} ${target.title || target.question.title}`
+
+  notify('知乎', content, '', 'http://www.zhihu.com')
+}
+
 export default notify

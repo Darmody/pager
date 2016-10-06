@@ -22,7 +22,20 @@ export function githubScheduler() {
   window.setInterval(fetchEvents, 5 * 60 * 1000)
 }
 
+export function zhihuScheduler() {
+  const fetchFeeds = () => {
+    const { zhihuFeeds, zhihuToken } = this.props
+    if (zhihuToken) {
+      zhihuFeeds(zhihuToken, 1)
+    }
+  }
+
+  window.setTimeout(fetchFeeds, 2 * 1000)
+  window.setInterval(fetchFeeds, 10 * 1000)
+}
+
 export default function scheduler() {
+  this::zhihuScheduler()
   this::doubanScheduler()
   this::githubScheduler()
 }

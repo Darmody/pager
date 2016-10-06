@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron'
+import zhihuCookies from '../Zhihu/cookies'
 
 let win = null
 
@@ -11,6 +12,8 @@ const create = () => {
         webSecurity: false,
       }
     })
+
+    zhihuCookies(win)
 
     win.on('closed', () => {
       win = null

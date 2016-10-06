@@ -7,10 +7,12 @@ import styles from './styles.scss'
 const BindingSection = ({
   authError,
   authed,
+  needCaptcha,
   username, password, onUsernameChange, onPasswordChange, onLogin, onLogout,
 }) => (
   <form styleName="binding-section">
     { authError && (<div styleName="error-message">账号绑定出错啦</div>) }
+    { needCaptcha && (<div styleName="error-message">你最近操作太频繁啦，先休息一下</div>) }
     {
       !authed && (
         <div styleName="login-section">
